@@ -1,0 +1,174 @@
+quer ler posicao inicial diferente de repouso (sim=1, nao=0)
+0
+nnos(numero de nos),nel(numero de elementos),nfc(numero de fases de carga),tol,ngf(no para saida),ngf1(nopara saida)
+13,10,1,.00000001,5,8
+numero de pontos de gauss altura, frequencia de impressao
+5,1
+elemento, numero de nos
+1 4
+2 4       
+3 4
+4 4
+5 4
+6 4
+7 4
+8 4
+9 4
+10 4
+tipo do elemento (cont esq=2, segundo esquerda=4, domínio=1, cont dir=3, segundo direita=5)
+2
+4
+1
+1
+1
+1
+1
+1
+5
+3
+peso das NURBS por nó
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+incidencia      
+elemento,função de forma 1.....função de forma final
+1 1 2 3 4        
+2 2 3 4 5 
+3 3 4 5 6
+4 4 5 6 7
+5 5 6 7 8
+6 6 7 8 9
+7 7 8 9 10
+8 8 9 10 11
+9 9 10 11 12
+10 10 11 12 13
+tipo do no de extremidade(NÃO MEXER!)
+elemento, no1, tipo, nof, tipo !0 restrito !1 livre(RÓTULA) (não funciona para b-splines aida, colocar 0)
+1 0 0
+2 0 0
+3 0 0
+4 0 0
+5 0 0
+6 0 0
+7 0 0
+8 0 0
+9 0 0
+10 0 0
+coordenadas
+no,x,y
+1	0	0
+2	4.53081839	0
+3	11.08194188	0
+4	20.0	0
+5	30.0	0
+6	40.0	0
+7	50.0	0
+8	60.0	0
+9	70.0	0
+10	80.0	0
+11	88.91805812	0
+12	95.46918161	0
+13	100.0	0
+propriedades dos elementos
+elemento,elasticidade,coef. poisson ,altura,area,ybarra(posição da linha neutra),mom. inércia,densidade,coeficiente de amortecimento
+1	444444444.444444	0	3.0	3.0	1.5	2.250	0	0
+2	444444444.444444	0	3.0	3.0	1.5	2.250	0	0
+3	444444444.444444	0	3.0	3.0	1.5	2.250	0	0
+4	444444444.444444	0	3.0	3.0	1.5	2.250	0	0
+5	444444444.444444	0	3.0	3.0	1.5	2.250	0	0
+6	444444444.444444	0	3.0	3.0	1.5	2.250	0	0
+7	444444444.444444	0	3.0	3.0	1.5	2.250	0	0
+8	444444444.444444	0	3.0	3.0	1.5	2.250	0	0
+9	444444444.444444	0	3.0	3.0	1.5	2.250	0	0
+10 444444444.444444	0	3.0	3.0	1.5	2.250	0	0
+numero de nos com velocidade inicial
+1
+no, velox, vely, velz
+1,0,0,0
+Impacto sem atrito, região quadrada
+Entrar com o centro e a distância das faces ao centro
+xp,yp,xc,yc,coeficiente de atrito ao impacto
+-10000000000,-10000000000,100000000000,10000000000,0.
+primeira fase de carga
+numero de nos restritos, numero de nos carregados na fase, num. passos de tempo
+1,1,10000
+nelcar(num. ele. carr. qx,qy),nelnco(num. ele. carr. qn,qt),num. ele. temp.
+1,1,1
+leitura dos parametros de Newmark e passo de tempo
+beta, gama, dt !0.25 0.5, dt normal ! 0.5 1.5 dt (impacto)
+.25,.5,0.1
+restricao de graus de liberdade
+no,desloc x (1 fixo, 0 livre),desloc y (1 fixo, 0 livre),rotação (1 fixo, 0 livre)
+1,1,1,1
+leitura dos valores prescritos
+no,ux,uy,tetaz
+1,0,0,0
+comportamento temporal do movimento de bas (ba,bb,bc,bd,be,bf,bg,bh,bi,bj,bk) (NÃO MEXER)
+1,0,0,0,0,0,0,0,0,0,0
+CARGA CONCENTRADA nos com carregamento prescrito
+no,f1,f2
+13,0.,-1.,0.
+cargas distribuidas nasextremidades
+elemeto, qx no inicial, qx no final, qy no inicial, qy no final coordenadas
+1 0 0 0 0
+cargas distribuidas nas extremidades nao conservativas
+elemeto, qn no inicial, qn no final, qt no inicial, qt no final coordenadas
+1,0,0,0,0
+temeratura constante ao longo do elemento
+elemento temp. acima, temp. abaixo, coeficiente de dilatacao termica
+1,0.,0.,0.
+comportamento temporal da carga (ca,cb,cc,cd,ce,cf,cg,ch,ci,cj,ck)
+1,0,0,0,0,0,0,0,0,0,0 !terminou a fase 1
+
+
+
+
+
+
+
+
+rimeira fase de carga
+numero de nos restritos, numero de nos carregados na fase, num. passos de tempo
+2,1,100
+nelcar(num. ele. carr. qx,qy),nelnco(num. ele. carr. qn,qt),num. ele. temp.
+2,2,2
+leitura dos parametros de Newmark e passo de tempo
+beta, gama, dt !0.25 0.5, dt normal ! 0.5 1.5 dt (impacto)
+1.,1.,1.
+restricao de graus de liberdade
+no,ko1,ko2,ko3
+1,1,1,0
+7,1,1,0
+leitura dos valores prescritos
+no,ux,uy,tetaz
+1,0,0,0
+7,0,0,0
+comportamento temporal do movimento de bas (ba,bb,bc,bd,be,bf,bg,bh,bi,bj,bk)
+0,0,0,0,0,0,0,0,0,0,0
+nos com carregamento prescrito
+no,f1,f2
+7,0.0,.0,0.0
+cargas distribuidas nas extremidades
+elemeto, qx no inicial, qx no final, qy no inicial, qy no final coordenadas
+1,0,0,0.,0.
+2,0,0.,0.,0.
+cargas distribuidas nas extremidades nao conservativas
+elemeto, qn no inicial, qn no final, qt no inicial, qt no final coordenadas
+1,0.,0.,0,0.
+2,0.,0.,0,0.
+temeratura constante ao longo do elemento
+elemento temp. acima, temp. abaixo, coeficiente de dilatacao termica
+1,.01,0,1.
+2,.01,0,1.
+comportamento temporal da carga (ca,cb,cc,cd,ce,cf,cg,ch,ci,cj,ck)
+0,1,0,0,0,0,0,0,0,0,0 !terminou a fase 1
