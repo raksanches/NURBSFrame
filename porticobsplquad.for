@@ -198,7 +198,8 @@ c     variacao temporal da carga incluindo distribuída conservativa já alocada n
      #+crh*dexp(cri*ipc*dt)+cj*dexp(ck*ipc*dt))
         enddo
 
-        f(68) = -1000.*ipc
+
+        f(68) = -100.*ipc
 c     variacao temporal da posição para estático
 	  do i=1,n   !Número total de graus de liberdade
          if(ko(i).eq.1) p(i)=p0(i)+dp(i)*  !dinâmico
@@ -208,7 +209,7 @@ c     variacao temporal da posição para estático
         enddo
 
 
-        call alocanco  !Alocação do carregamento ortogonal (não conservativo)
+!        call alocanco  !Alocação do carregamento ortogonal (não conservativo)
 
 10      continue !Laço de iterações
         if (ia.le.6) call destroca1 !Atualização das variáveis após solução do sistema
@@ -221,7 +222,7 @@ c     variacao temporal da posição para estático
         call ma27 !Solver de domínio Público HSL (UK)
         call calculanorma       !Calculo da norma de parada das iterações
         ia=ia+1                 !contador de iterações
-        if (ia.gt.1005) goto 20 !Limite de iterações
+        if (ia.gt.10) goto 20 !Limite de iterações
         if ((rnorma.gt.tol).or.(ia.lt.2)) goto 10 !Teste de parada
  20     continue                !Fim das iterações
         
@@ -248,184 +249,93 @@ c           rnyint=0.d0
               testefunc=0.d0
 
 c     write(*,*) jel,itipoel(jel)
-              if((itipoel(jel).ne.2).and.(itipoel(jel).ne.3))then
-                 do inolocal=2,3
-                    i=ic(jel,inolocal)
-                    
-                    if(itagnos(i).eq.0)then
-                       xsi1=2.d0*inolocal-5.d0
-                       
-                       do ifunclocal=1,4
-                          
-                          ifunc=ic(jel,ifunclocal)
-                                                   
-                          call formaederi0
-                          
-                          testefunc=testefunc+fi(ifunclocal)
-c                          rnxint(i)=rnxint(i)+fi(ifunclocal)*RNx(i)
- 
-                         do idof=1,3
-                             
-                             solint(glgl(i,idof))=solint(glgl(i,idof))
-     $                            +p(glgl(ifunc,idof))*fi(ifunclocal)
-                             if (idof .lt. 3) then
-                                coordint(idof,i)=coordint(idof
-     $                               ,i)+fi(ifunclocal)*p(glgl(ifunc
-     $                               ,idof))
-                              
-                               
-
-                                confini(idof,i)=confini(idof,i)
-     $                               +fi(ifunclocal)*p0(glgl(ifunc
-     $                               ,idof))
-                              
-c                               obter velocidade do nó interpolada
-                                velint(idof,i)=velint(idof,i)
-     $                               +fi(ifunclocal)*vs(glgl(ifunc
-     $                               ,idof))
-                               
-                                                                  
-                             endif 
-                             
-                          enddo !idof
-                          
-                       enddo    !ifunclocal
-                       
-                       itagnos(i)=1
-c$$$  
-c$$$  else
-c$$$  
-                    endif
-                    
-                 enddo          !inolocal
-                 
-              endif             !itipoel
-              
-              
-              if(itipoel(jel).eq.2)then
-                 
-                 do inolocal=1,3,2
-                    i=ic(jel,inolocal)
-                    if(itagnos(i).eq.0)then
-                       do ifunclocal=1,4
-                          ifunc=ic(jel,ifunclocal)
-                          xsi1=1.d0*inolocal-2.d0
-                          
-                          call formaederi0
-                          
-c     write(*,*)jel,xsi1                  
-c     read(*,*)
-                          
-                          do idof=1,3
-                             
-                             solint(glgl(i,idof))=solint(glgl(i,idof))
-     $                            +p(glgl(ifunc,idof))*fi(ifunclocal)
-                             if (idof .lt. 3) then
-c obter a coordenada do nó interpolada
-                                coordint(idof,i)=coordint(idof
-     $                               ,i)+fi(ifunclocal)*p(glgl(ifunc
-     $                               ,idof))
-
-                                confini(idof,i)=confini(idof,i)
-     $                               +fi(ifunclocal)*p0(glgl(ifunc
-     $                               ,idof))
-
-c     obter velocidade do nó interpolada
-                                velint(idof,i)=velint(idof,i)
-     $                               +fi(ifunclocal)*vs(glgl(ifunc
-     $                               ,idof))
-                                
-                             endif 
-                          enddo
-                          
-                       enddo
-                       itagnos(i)=1
-                    else
-                    endif
-                    
-                 enddo
-              endif
-              
       
-              if(itipoel(jel).eq.3)then
-                 do inolocal=2,4,2
-                    i=ic(jel,inolocal)
-                    if(itagnos(i).eq.0)then
-                       do ifunclocal=1,4
-                          ifunc=ic(jel,ifunclocal)
-                          xsi1=1.d0*inolocal-3.d0
-                          
-                          call formaederi0
-                          
-c     write(*,*)jel,xsi1                  
-c     read(*,*)
+              xsi1=-1.d0 
+              
+              do ifunclocal=1,3
                  
-                         
-         
-                          do idof=1,3
-                             
-                             solint(glgl(i,idof))=solint(glgl(i,idof))
-     $                            +p(glgl(ifunc,idof))*fi(ifunclocal)
-                             if (idof .lt. 3) then
-                                coordint(idof,i)=coordint(idof
-     $                               ,i)+fi(ifunclocal)*p(glgl(ifunc
-     $                               ,idof))
-                                confini(idof,i)=confini(idof,i)
-     $                               +fi(ifunclocal)*p0(glgl(ifunc
-     $                               ,idof))
-c     obter velocidade do nó interpolada
-                                velint(idof,i)=velint(idof,i)
-     $                               +fi(ifunclocal)*vs(glgl(ifunc
-     $                               ,idof))
-                                
-                             endif 
-                          enddo
-                          
-                       enddo
-                       itagnos(i)=1
-                    else
-                    endif
+                 ifunc=ic(jel,ifunclocal)
+                 
+                 call formaederi0
+                 
+                 testefunc=testefunc+fi(ifunclocal)
+c     rnxint(i)=rnxint(i)+fi(ifunclocal)*RNx(i)
+                 
+                 do idof=1,3
                     
-                 enddo
-              endif
-              
-              
-c              write(*,*)testefunc,jel
-              
-c$$$              
-c$$$
-c$$$              if(itipoel(jel).eq.3)then
-c$$$
-c$$$                 do inolocal=2,3
-c$$$
-c$$$                    i=ic(jel,inolocal)
-c$$$
-c$$$
-c$$$                    if(itagnos(i).eq.0)then
-c$$$
-c$$$                    do ifunclocal=1,3
-c$$$
-c$$$                       ifunc=ic(jel,ifunclocal)
-c$$$                       
-c$$$                       xsi1=2.d0*inolocal-5.d0
-c$$$                       
-c$$$                       call formaederi0
-c$$$                       
-c$$$                       do idof=1,3
-c$$$                          
-c$$$                          solint(glgl(i,idof))=solint(glgl(i,idof))
-c$$$     $                        +p(glgl(ifunc,idof))*fi(ifunclocal)
-c$$$                       enddo
-c$$$
-c$$$                    enddo
-c$$$                    itagnos(i)=1
-c$$$                    else
-c$$$                    endif
-c$$$
-c$$$                 enddo
-c$$$              endif
-              
+                    solint(3*jel+idof-3)=solint(3*jel+idof-3)
+     $                   +p(glgl(ifunc,idof))*fi(ifunclocal)
+                    if (idof .lt. 3) then
+                       coordint(idof,jel)=coordint(idof
+     $                      ,jel)+fi(ifunclocal)*p(glgl(ifunc
+     $                      ,idof))
+                       
+                       
+                       
+                       confini(idof,jel)=confini(idof,jel)
+     $                      +fi(ifunclocal)*p0(glgl(ifunc
+     $                      ,idof))
+                              
+c     obter velocidade do nó interpolada
+                       velint(idof,jel)=velint(idof,jel)
+     $                      +fi(ifunclocal)*vs(glgl(ifunc
+     $                      ,idof))
+                       
+                       
+                    endif 
+                    
+                 enddo          !idof
+                 
+              enddo             !ifunclocal
+
            enddo
+
+           jel=nel+1
+
+           j=jel-1
+           testefunc=0.d0
+           
+c     write(*,*) jel,itipoel(jel)
+           
+           xsi1=1.d0 
+           
+           do ifunclocal=1,3
+              
+              ifunc=ic(jel-1,ifunclocal)
+              
+              call formaederi0
+              
+              testefunc=testefunc+fi(ifunclocal)
+c     rnxint(i)=rnxint(i)+fi(ifunclocal)*RNx(i)
+              
+              do idof=1,3
+                 
+                 solint(3*jel+idof-3)=solint(3*jel+idof-3)
+     $                +p(glgl(ifunc,idof))*fi(ifunclocal)
+                 if (idof .lt. 3) then
+                    coordint(idof,jel)=coordint(idof
+     $                   ,jel)+fi(ifunclocal)*p(glgl(ifunc
+     $                   ,idof))
+                    
+                    
+                    
+                    confini(idof,jel)=confini(idof,jel)
+     $                   +fi(ifunclocal)*p0(glgl(ifunc
+     $                   ,idof))
+                    
+c     obter velocidade do nó interpolada
+                    velint(idof,jel)=velint(idof,jel)
+     $                   +fi(ifunclocal)*vs(glgl(ifunc
+     $                   ,idof))
+                    
+                    
+                 endif 
+                 
+              enddo             !idof
+              
+           enddo                !ifunclocal
+           
+           
            
 c     Montagem do gráfico de deslocamento dos nós
 
@@ -440,12 +350,17 @@ c$$$c     write(48,*) dt*ipt,(coordint(1,8)- confini(1,8))
 c$$$c     write(48,*) dt*ipt,(coordint(1,8)- confini(1,8)) 
 
 !        write(48,*) dt*ipt,(velint(1,8))
-           write(43,*) (-100. + p(glgl(23
-     $          ,1)))/100., 1000.*ipc*10000./(1000000000.)
-           write(44,*) ( p(glgl(23
-     $          ,2)))/100.,1000.*ipc*10000./(1000000000.)
+c$$$           write(43,*) (-100. + p(glgl(23
+c$$$     $          ,1)))/100., 1000.*ipc*10000./(1000000000.)
+c$$$           write(44,*) ( p(glgl(23
+c$$$     $          ,2)))/100.,1000.*ipc*10000./(1000000000.)
        
-          
+           write(43,*) (-10. + p(glgl(42
+     $          ,1)))/100., 2000.*ipc*10000./(1000000000.)
+           write(44,*) ( p(glgl(42
+     $          ,2)))/100.,2000.*ipc*10000./(1000000000.)
+
+           
       write(5,*)'deslocamentos verticais'
 
            do i=1,nnos  
@@ -1129,6 +1044,8 @@ c     de rigidez a(valores diferentes de zero) ma27
                   a(kkk)=h(i,jj)
                else
                endif
+
+
             enddo
          enddo
       enddo
@@ -2416,138 +2333,76 @@ c     ////////////////////////////////////////////////////////////
          x2 = xsi1*xsi1
          x1 = xsi1
                           
-         if (itipoel(j).eq.1) then  !funcoes de forma para o elemento do centro (tipo 01)
-      
-            fi(1)=-1.d0/48.d0*x3+1.d0/16.d0*x2-1.d0/16.d0*x1+1.d0/48.d0
+         if (itipoel(j).eq.1) then !funcoes de forma para o elemento do centro (tipo 01)
+            fi(1) = (0.25d0*x2 - 0.5d0*x1 + 0.25d0)
+            fi(2) = (-0.375d0*x2 + 0.25d0*x1 + 0.625d0)
+            fi(3) = (0.125d0*x2 + 0.25d0*x1 +0.125d0)
             
-            dfi(1,1)=-3.d0/48.d0*x2+2.d0/16.d0*x1-1.d0/16.d0
-              
-            fi(2)=(1.d0/16.d0*x3-1.d0/16.d0*x2-5.d0/16.d0*x1+23.d0
-     $           /48.d0)
+            dfi(1,1) = (0.5d0*x1 - 0.5d0)
+            dfi(2,1) = (-0.75d0*x1 + 0.25d0)
+            dfi(3,1) = (0.25d0*x1 + 0.25d0)
             
-            dfi(2,1)=(3.d0/16.d0*x2-2.d0/16.d0*x1-5.d0/16.d0)
-
-            
-            fi(3)=(-1.d0/16.d0*x3-1.d0/16.d0*x2+5.d0/16.d0*x1+23.d0
-     $           /48.d0)
-            
-            dfi(3,1)=(-3.d0/16.d0*x2-2.d0/16.d0*x1+5.d0/16.d0)
-                          
-            fi(4)=1.d0/48.d0*x3+1.d0/16.d0*x2+1.d0/16.d0*x1+1.d0/48.d0
-            
-            dfi(4,1)=3.d0/48.d0*x2+2.d0/16.d0*x1+1.d0/16.d0
-
 c     write(*,*)x1,fi(1),dfi(1,1),itipoel(j)
          endif
+         
+         if (itipoel(j).eq.2)then !funcoes de forma para o elemento do centro (tipo 02)
+            
+            fi(1) = (0.125d0*x2 - 0.25d0*x1 + 0.125d0)
+            fi(2) = (-0.25d0*x2 + 0.75d0)
+            fi(3) = (0.125d0*x2 + 0.25d0*x1 +0.125d0)
 
-         if (itipoel(j).eq.2)then !funcoes de forma para o elemento da ponta a esquerda (tipo 02)
-            fi(1)=(-1.d0/8.d0*x3)+(3.d0/8.d0*x2) -(3.d0/8.d0*x1)+(1.d0
-     $           /8.d0)
-            
-            dfi(1,1)=(-3.d0/8.d0*x2)+(6.d0/8.d0*x1) -(3.d0/8.d0)
-           
-            fi(2)=(7.d0/32.d0*x3)-(15.d0/32.d0*x2)-(3.d0/32.d0*x1)
-     $           +(19.d0/32.d0)
-            dfi(2,1)=(21.d0/32.d0*x2)-(30.d0/32.d0*x1)-(3.d0/32.d0) 
-            
-            fi(3)=(-22.d0/192.d0*x3)+(1.d0/32.d0*x2)+(13.d0/32.d0*x1)
-     $           +(25.d0/96.d0)
-            dfi(3,1)=(-66.d0/192.d0*x2) +(2.d0/32*x1)+(13.d0/32.d0)
-            
-            fi(4)= (1.d0/48.d0*x3)+(1.d0/16.d0*x2)+(1.d0/16.d0*x1)+(1.d0
-     $           /48.d0)
-            dfi(4,1)=(3.d0/48*x2)+(2.d0/16*x1)+(1.d0/16)
-            
+            dfi(1,1) = (0.25d0*x1 - 0.25d0)
+            dfi(2,1) = (-0.5d0*x1)
+            dfi(3,1) = (0.25d0*x1 + 0.25d0)
+
 c           write(*,*)x1,fi(1),dfi(1,1),itipoel(j)
          endif
       
                
                  
          if (itipoel(j).eq.3)then !funcoes de forma para o elemento da ponta a direita (tipo 03)
-           
-            fi(1)= (-1.d0/48.d0*x3)+ (1.d0/16.d0*x2)-(1.d0/16.d0*x1)+
-     $           (1.d0/48.d0)
-            dfi(1,1)=(-3.d0/48.d0*x2)+(2.d0/16*x1)-(1.d0/16)
+            fi(1) = (0.125d0*x2 - 0.25d0*x1 + 0.125d0)
+            fi(2) = (-0.375d0*x2 -0.25d0*x1 + 0.625d0)
+            fi(3) = (0.25d0*x2 + 0.5d0*x1 +0.25d0)
 
-            fi(2)=(22.d0/192.d0*x3) +( 1.d0/32.d0*x2) -(13.d0/32.d0*x1)
-     $           +(25.d0/96.d0)
-            dfi(2,1)=(66.d0/192.d0*x2) +(2.d0/32*x1) - (13.d0/32.d0)
+            dfi(1,1) = (0.25d0*x1 - 0.25d0)
+            dfi(2,1) = (-0.75d0*x1 - 0.25d0)
+            dfi(3,1) = (0.5d0*x1 + 0.5d0)
 
-    
-            fi(3)=-(7.d0/32.d0*x3) -(15.d0/32.d0*x2) + (3.d0/32.d0*x1)
-     $           +(19.d0/32.d0)
-            dfi(3,1)=-(21.d0/32.d0*x2) -(30.d0/32.d0*x1) +(3.d0/32.d0) 
-
-           
-            fi(4)=(1.d0/8.d0*x3)+(3.d0/8.d0*x2) + (3.d0/8.d0*x1)+(1.d0
-     $           /8.d0)
-            dfi(4,1)=(3.d0/8.d0*x2)+(6.d0/8.d0*x1) +(3.d0/8.d0)         
 c         write(*,*)x1,fi(1),dfi(1,1),itipoel(j)
          endif
- 
-          if (itipoel(j).eq.4)then  !funcoes de forma para o segundo elemento da ponta a esquerda (tipo 04)  
-            
-             fi(1)=(-2.d0/64.d0*x3)+(6.d0/64.d0*x2) - (6.d0/64.d0*x1)
-     $            +(2.d0/64.d0)
-             dfi(1,1)=(-6.d0/64.d0*x2)+(12.d0/64.d0*x1) - (6.d0/64.d0)
 
-             fi(2)=(14.d0/192.d0*x3)-(3.d0/32.d0*x2)-(9.d0/32.d0*x1)
-     $            +(15.d0/32.d0)
-             dfi(2,1)=(42.d0/192.d0*x2) -(6.d0/32.d0*x1) -(9.d0/32.d0)
 
-                                                 
-             fi(3)=(-1.d0/16.d0*x3)-(1.d0/16.d0*x2)+(5.d0/16.d0*x1)
-     $            +(23.d0/48.d0)
-             dfi(3,1)=(-3.d0/16.d0*x2)-(2.d0/16.d0*x1) +(5.d0/16.d0)
-                           
-             fi(4)= (1.d0/48.d0*x3)+ (3.d0/48.d0*x2)+(3.d0/48.d0*x1)+
-     $            (1.d0/48.d0)
-             dfi(4,1)=(3.d0/48.d0*x2)+(6.d0/48*x1)+(3.d0/48.d0)
-            
-c             write(*,*)x1,fi(1),dfi(1,1),itipoel(j)
+         if (itipoel(j).eq.4)then !funcoes de forma para o elemento da ponta a direita (tipo 03)
+            fi(1) = (0.25d0*x2 - 0.5d0*x1 + 0.25d0)
+            fi(2) = (-0.5d0*x2 + 0.5d0)
+            fi(3) = (0.25d0*x2 + 0.5d0*x1 +0.25d0)
+
+            dfi(1,1) = (0.5d0*x1 - 0.5d0)
+            dfi(2,1) = (-1.d0*x1)
+            dfi(3,1) = (0.5d0*x1 + 0.5d0)
+
+c         write(*,*)x1,fi(1),dfi(1,1),itipoel(j)
          endif
 
-         if (itipoel(j).eq.5)then !funcoes de forma para o segundo elemento da ponta a direita (tipo 05)
-            fi(1)= (-1.d0/48.d0*x3)+ (3.d0/48.d0*x2)-(3.d0/48.d0*x1)+
-     $           (1.d0/48.d0)
-            dfi(1,1)=-(3.d0/48.d0*x2)+(6.d0/48.d0*x1)-(3.d0/48.d0)
-
-
-            fi(2)=(1.d0/16.d0*x3) - (1.d0/16.d0*x2) -(5.d0/16.d0*x1)
-     $           +(23.d0/48.d0)
-            dfi(2,1)=(3.d0/16.d0*x2) - (2.d0/16.d0*x1) -(5.d0/16.d0)
-
-            
-            fi(3)=(-14.d0/192.d0*x3) -(3.d0/32.d0*x2) +(9.d0/32.d0*x1)
-     $           +(15.d0/32.d0)
-            dfi(3,1)=(-42.d0/192.d0*x2) -(6.d0/32.d0*x1) +(9.d0/32.d0)
-            
-            
-           
-            fi(4)=(2.d0/64.d0*x3)+(6.d0/64.d0*x2)+(6.d0/64.d0*x1)+(2.d0
-     $           /64.d0)
-            dfi(4,1)=(6.d0/64.d0*x2)+(12.d0/64.d0*x1) +(6.d0/64.d0)
-
-c            write(*,*)x1,fi(1),dfi(1,1),itipoel(j)
-         endif
-
+         
          sumwbspl=0.d0
          sumdwbspldxsi=0.d0
 
-         do inurbs=1,4
+         do inurbs=1,notl(j)
             sumwbspl=sumwbspl+fi(inurbs)*pesoNURBS(ic(j,inurbs))
             sumdwbspldxsi=sumdwbspldxsi+dfi(inurbs,1)*pesoNURBS(ic(j
      $           ,inurbs))
 
          enddo
-         do inurbs=1,4
+         do inurbs=1,notl(j)
             dfi(inurbs,1)=(dfi(inurbs,1)*pesoNURBS(ic(j,inurbs))
      $           *sumwbspl-pesoNURBS(ic(j,inurbs))*fi(inurbs)
      $           *sumdwbspldxsi) /(sumwbspl*sumwbspl)
          enddo
 c$$$
 c$$$         
-         do inurbs=1,4
+         do inurbs=1,notl(j)
             fi(inurbs)=fi(inurbs)*pesoNURBS(ic(j,inurbs))/sumwbspl
          enddo
 
@@ -6981,7 +6836,7 @@ c     *******************************************
       write(8,500)
       write(8,*)'<VTKFile type="UnstructuredGrid">'
       write(8,*)'  <UnstructuredGrid>'
-      write(8,*)'  <Piece NumberOfPoints="', nnos,'
+      write(8,*)'  <Piece NumberOfPoints="', nel+1,'
      $"  NumberOfCells= "',nel,'">'
       
       
@@ -6989,9 +6844,9 @@ c     imprime coordenadas dos nos
       write(8,*) '    <Points>'
       write(8,*) '      <DataArray type="Float64"
      $ NumberOfComponents ="3" format="ascii">'
-      do i=1,nnos
+      do i=1,nel+1
 c     p(glgl(i,1)),' ',p(glgl(i,2)),' ',0!
-         write(8,*)     solint(glgl(i,1)),' ',solint(glgl(i,2)),' ',0! coordint(1,i),' ',coordint(2,i),' ',0
+         write(8,*)     solint(3*i-2),' ',solint(3*i-1),' ',0! coordint(1,i),' ',coordint(2,i),' ',0
       enddo
       write(8,*)'      </DataArray>'
       write(8,*)'    </Points>'
@@ -7001,17 +6856,18 @@ c     write elemente connectivity
       write(8,*)'      <DataArray type="Int32" Name= "connectivity"
      $ format="ascii">'
       do k=1,nel
-         if(itipoel(k).ne.2)then
-            if(itipoel(k).ne.3)then
-               write(8,*) (ic(k,j)-1,j=2,3)
-         endif
-      endif
-      if(itipoel(k).eq.2)then
-         write(8,*) ic(k,1)-1,ic(k,3)-1
-      endif
-      if(itipoel(k).eq.3)then
-         write(8,*) ic(k,2)-1,ic(k,4)-1
-      endif
+         write(8,*) k-1, k
+c$$$         if(itipoel(k).ne.2)then
+c$$$            if(itipoel(k).ne.3)then
+c$$$               write(8,*) (ic(k,j)-1,j=2,3)
+c$$$         endif
+c$$$      endif
+c$$$      if(itipoel(k).eq.2)then
+c$$$         write(8,*) ic(k,1)-1,ic(k,3)-1
+c$$$      endif
+c$$$      if(itipoel(k).eq.3)then
+c$$$         write(8,*) ic(k,2)-1,ic(k,4)-1
+c$$$      endif
 c$$$          if(itipoel(k).eq.4)then
 c$$$            write(8,*) (ic(k,j)-1,j=2,3)
 c$$$         endif
@@ -7044,7 +6900,7 @@ c     write deslocamentos
       write(8,*)'    <PointData>'
       write(8,*)'      <DataArray type="Float64" NumberOfComponents 
      $=" 3" Name="desloc"           format="ascii">'
-      do i=1,nnos
+      do i=1,nel+1
 c$$$         write(8,*) p(glgl(i,1))-p0(glgl(i,1)),' ',p(glgl(i
 c$$$     $        ,2))-p0(glgl(i,2)),' ',0
          
@@ -7061,7 +6917,7 @@ c        write(8,*) confini(1,i),' ', confini(2,i),' ',0
 c     write deslocamentos do pontos de controle
       write(8,*)'      <DataArray type="Float64" NumberOfComponents 
      $=" 3" Name="deslpc"           format="ascii">'
-      do i=1,nnos
+      do i=1,nel+1
           write(8,*) p(glgl(i,1))-p0(glgl(i,1)),' ',p(glgl(i
      $        ,2))-p0(glgl(i,2)),' ',0
 
@@ -7072,7 +6928,7 @@ c     write deslocamentos do pontos de controle
 c     write tensoes
       write(8,*)'      <DataArray type="Float64" NumberOfComponents 
      $=" 3" Name="confin" format="ascii">'
-      do i=1,nnos
+      do i=1,nel+1
          write(8,*) confini(1,i),' ',confini(2,i),' ',0
          
       enddo
@@ -7081,7 +6937,7 @@ c     write tensoes
 c     write tensoes
       write(8,*)'      <DataArray type="Float64" NumberOfComponents 
      $=" 3" Name="tensao" format="ascii">'
-      do i=1,nnos
+      do i=1,nel+1
         do ii=1,3
          if (sigmaacima(i,ii).lt.(10**(-30.)))sigmaacima(i,ii)=0.d0
         enddo

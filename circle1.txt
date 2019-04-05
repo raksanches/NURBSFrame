@@ -1,43 +1,38 @@
 quer ler posicao inicial diferente de repouso (sim=1, nao=0)
 0
 nnos(numero de nos),nel(numero de elementos),nfc(numero de fases de carga),tol,ngf(no para saida),ngf1(nopara saida)
-13,10,1,.00000001,5,8
+6,6,1,.00000001,5,8
 numero de pontos de gauss altura, frequencia de impressao
 5,1
 elemento, numero de nos
-1 4
-2 4       
-3 4
-4 4
-5 4
-6 4
-7 4
-8 4
-9 4
-10 4
+1 3
+2 3       
+3 3
+4 3
+5 3
+6 3
 tipo do elemento (cont esq=2, segundo esquerda=4, domínio=1, cont dir=3, segundo direita=5)
-2
 4
-1
-1
-1
-1
-1
-1
-5
-3
+4
+4
+4
+4
+4
+peso das NURBS por nó
+1.
+.86603
+1.
+.86603
+1.
+.86603
 incidencia      
 elemento,função de forma 1.....função de forma final
-1 1 2 3 4        
-2 2 3 4 5 
-3 3 4 5 6
-4 4 5 6 7
-5 5 6 7 8
-6 6 7 8 9
-7 7 8 9 10
-8 8 9 10 11
-9 9 10 11 12
-10 10 11 12 13
+1 1 2 3         
+2 3 4 5  
+3 5 6 7 
+4 7 8 9 
+5 9 10 11 
+6 11 12 1 
 tipo do no de extremidade(NÃO MEXER!)
 elemento, no1, tipo, nof, tipo !0 restrito !1 livre(RÓTULA) (não funciona para b-splines aida, colocar 0)
 1 0 0
@@ -53,30 +48,29 @@ elemento, no1, tipo, nof, tipo !0 restrito !1 livre(RÓTULA) (não funciona para
 coordenadas
 no,x,y
 1	0	0
-2	45.3081839	0
-3	110.8194188	0
-4	200.	0
-5	300.	0
-6	400.	0
-7	500.	0
-8	600.	0
-9	700.	0
-10	800.	0
-11	889.1805812	0
-12	954.6918161	0
-13	1000.	0
+2	4.53081839	0
+3	11.08194188	0
+4	20.0	0
+5	30.0	0
+6	40.0	0
+7	50.0	0
+8	60.0	0
+9	70.0	0
+10	80.0	0
+11	88.91805812	0
+12	95.46918161	0
 propriedades dos elementos
 elemento,elasticidade,coef. poisson ,altura,area,ybarra(posição da linha neutra),mom. inércia,densidade,coeficiente de amortecimento
-1	3555.5555555556	0	150	150	75	281250	0	0
-2	3555.5555555556	0	150	150	75	281250	0	0
-3	3555.5555555556	0	150	150	75	281250	0	0
-4	3555.5555555556	0	150	150	75	281250	0	0
-5	3555.5555555556	0	150	150	75	281250	0	0
-6	3555.5555555556	0	150	150	75	281250	0	0
-7	3555.5555555556	0	150	150	75	281250	0	0
-8	3555.5555555556	0	150	150	75	281250	0	0
-9	3555.5555555556	0	150	150	75	281250	0	0
-10	3555.5555555556	0	150	150	75	281250	0	0
+1	444444444.444444	0	3.0	3.0	1.5	2.250	0	0
+2	444444444.444444	0	3.0	3.0	1.5	2.250	0	0
+3	444444444.444444	0	3.0	3.0	1.5	2.250	0	0
+4	444444444.444444	0	3.0	3.0	1.5	2.250	0	0
+5	444444444.444444	0	3.0	3.0	1.5	2.250	0	0
+6	444444444.444444	0	3.0	3.0	1.5	2.250	0	0
+7	444444444.444444	0	3.0	3.0	1.5	2.250	0	0
+8	444444444.444444	0	3.0	3.0	1.5	2.250	0	0
+9	444444444.444444	0	3.0	3.0	1.5	2.250	0	0
+10 444444444.444444	0	3.0	3.0	1.5	2.250	0	0
 numero de nos com velocidade inicial
 1
 no, velox, vely, velz
@@ -103,7 +97,7 @@ comportamento temporal do movimento de bas (ba,bb,bc,bd,be,bf,bg,bh,bi,bj,bk) (N
 1,0,0,0,0,0,0,0,0,0,0
 CARGA CONCENTRADA nos com carregamento prescrito
 no,f1,f2
-13,0.,-1.,0.
+12,0.,-1000.,0.
 cargas distribuidas nasextremidades
 elemeto, qx no inicial, qx no final, qy no inicial, qy no final coordenadas
 1 0 0 0 0
